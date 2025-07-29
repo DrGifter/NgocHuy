@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Screaming in fear</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./style/style.css">
+  <style>
+    .fog {
+      position: absolute;
+      top: -100px;
+      left: -100px;
+      width: 100%;
+      height: 100%;
+      background: url('./style/Eyes.jpg') repeat;
+      opacity: 0.1;
+      animation: drift 20s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(1.5px);
+    }
+
+    .message {
+  font-family: 'Pacifico', cursive;
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  color: white;
+  text-align: center;
+  text-shadow: 2px 2px 8px black;
+  opacity: 0;
+  transition: opacity 2s ease;
+  z-index: 99999;
+  display: none;
+  background-color: rgba(239, 243, 112, 0.6); 
+  padding: 20px 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+  </style>
+</head>
+<body>
+  <div class="fog"></div>
+  <div class="content">Hello Beautiful Girl 💀...</div>
+  
+  <div class="candle">
+    <img id="candleImage" src="./style/Candle-On.png" alt="Candle">
+    <button class="btn" onclick="blowCandle()">Thoi Nen Di...</button>
+  </div>
+
+  <img id="scaryImage" src="./style/HetHon.jpg" alt="Scary Fullscreen Image">
+  <img id="logo" src="./style/Logo.png" alt="Logo Image">
+  <div id="message" class="message">Bạn mệt 😟, có ta lo 😘! Tự tin nhé 💯</div>
+  
+  <audio id="scarySound" src="./style/First Date.mp3" preload="auto"></audio>
+  <audio id="scarySound1" src="./style/Nhạc Kinh Dị Kể Chuyện Ma.mp3" preload="auto"></audio>
+  <video id="scaryVideo" src="./style/Video.mp4" autoplay muted></video>
+
+  <script>
+    const sound = document.getElementById("scarySound");
+    const sound1 = document.getElementById("scarySound1");
+    const scaryImage = document.getElementById("scaryImage");
+    const scaryVideo = document.getElementById("scaryVideo");
+    const candle = document.getElementById("candleImage");
+    const message = document.getElementById("message");
+
+    let loopStartTime = 0.5;
+
+   function blowCandle() {
+  candle.src = "./style/Candle-Off.png";
+
+  setTimeout(() => {
+    sound1.pause();
+
+    sound.volume = 1.0;
+    sound.currentTime = loopStartTime;
+    sound.play();
+
+    scaryImage.style.display = "block";
+    scaryImage.style.opacity = "1";
+
+    // Hiển thị ảnh trong 5s
+    setTimeout(() => {
+      scaryImage.style.opacity = "0";
+
+      setTimeout(() => {
+        scaryImage.style.display = "none";
+
+        // Hiện video ngay lập tức
+        scaryVideo.style.display = "block";
+        scaryVideo.style.opacity = "1";
+        scaryVideo.currentTime = 0;
+        scaryVideo.play();
+
+        // Hiện chữ sau khi video đã phát được 2s
+        setTimeout(() => {
+          message.style.display = "block";
+          requestAnimationFrame(() => {
+            message.style.opacity = "1";
+          });
+
+          // Ẩn chữ sau 3s
+          setTimeout(() => {
+            message.style.opacity = "0";
+            setTimeout(() => {
+              message.style.display = "none";
+            }, 2000);
+          }, 5000);
+        }, 2000); // chữ hiển thị sau khi video chạy 2s
+
+      }, 2000); // delay để ảnh mờ dần xong rồi mới ẩn
+    }, 5000);
+
+    // Loop sound
+    sound.onended = function () {
+      sound.currentTime = loopStartTime;
+      sound.play();
+    };
+  }, 5000); // delay 5s sau khi nhấn nút mới bắt đầu hiệu ứng
+}
+
+    function playSound1From4s() {
+      try {
+        sound1.currentTime = 11;
+        sound1.volume = 1.0;
+        sound1.play().then(() => {
+          console.log("Đã phát scarySound1");
+        }).catch((error) => {
+          console.warn("Không thể phát tự động (sẽ phát sau):", error);
+        });
+      } catch (e) {
+        console.error("Lỗi phát scarySound1:", e);
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      playSound1From4s();
+
+      document.addEventListener("click", () => {
+        if (sound1.paused) {
+          playSound1From4s();
+        }
+      }, { once: true }); 
+    });
+  </script>
+</body>
+</html>
